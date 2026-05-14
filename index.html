@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elias Lenz — Consulting, Cybersecurity & Research</title>
+  <meta name="description" content="Elias Lenz — management consultant, cybersecurity architect, and PhD researcher in Policy-as-Code. Founder of BridgeAxis Consulting UG." />
+  <meta property="og:title" content="Elias Lenz — Consulting, Cybersecurity & Research" />
+  <meta property="og:description" content="Management consulting, DevSecOps, and Policy-as-Code automation from Filderstadt, Baden-Wurttemberg, Germany." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    /* Art direction: Professional hub, cybersecurity + consulting tone → authoritative, dark-tech-minimal
+       Palette: Near-black surfaces, cool teal accent, warm off-white text
+       Typography: Instrument Serif (display) + DM Sans (body)
+       Density: Spacious sections, dense dashboard cards */
+
+    :root, [data-theme="light"] {
+      --color-bg:             #f5f4f0;
+      --color-surface:        #f9f8f5;
+      --color-surface-2:      #fdfcfa;
+      --color-surface-offset: #eeece7;
+      --color-surface-dynamic:#e5e3dd;
+      --color-divider:        #dbd9d4;
+      --color-border:         #d2d0ca;
+      --color-text:           #1a1814;
+      --color-text-muted:     #6b6a65;
+      --color-text-faint:     #b5b3ae;
+      --color-text-inverse:   #f5f4f0;
+      --color-primary:        #01696f;
+      --color-primary-hover:  #0c4e54;
+      --color-primary-active: #0f3638;
+      --color-primary-highlight: #cedad6;
+      --color-success:        #437a22;
+      --color-gold:           #d19900;
+      --color-blue:           #006494;
+      --color-purple:         #7a39bb;
+      --color-orange:         #da7101;
+      --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
+      --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
+      --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / 0.12);
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem;    --space-5: 1.25rem;--space-6: 1.5rem;
+      --space-8: 2rem;    --space-10:2.5rem; --space-12:3rem;
+      --space-16:4rem;    --space-20:5rem;   --space-24:6rem;
+      --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+      --radius-xl: 1rem; --radius-full: 9999px;
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:             #111110;
+      --color-surface:        #161614;
+      --color-surface-2:      #1a1a18;
+      --color-surface-offset: #1d1d1b;
+      --color-surface-dynamic:#252523;
+      --color-divider:        #222220;
+      --color-border:         #2e2e2c;
+      --color-text:           #e8e7e4;
+      --color-text-muted:     #7a7977;
+      --color-text-faint:     #484745;
+      --color-text-inverse:   #111110;
+      --color-primary:        #4f98a3;
+      --color-primary-hover:  #227f8b;
+      --color-primary-active: #1a626b;
+      --color-primary-highlight: #1e3535;
+      --color-success:        #6daa45;
+      --color-gold:           #e8af34;
+      --color-blue:           #5591c7;
+      --color-purple:         #a86fdf;
+      --color-orange:         #fdab43;
+      --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
+      --shadow-md: 0 4px 12px oklch(0 0 0 / 0.4);
+      --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.5);
+    }
+
+    @media (prefers-color-scheme: light) { :root:not([data-theme]) { --color-bg:#f5f4f0; --color-surface:#f9f8f5; --color-surface-2:#fdfcfa; --color-surface-offset:#eeece7; --color-divider:#dbd9d4; --color-border:#d2d0ca; --color-text:#1a1814; --color-text-muted:#6b6a65; --color-text-faint:#b5b3ae; --color-primary:#01696f; --shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06); --shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08); } }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body { min-height: 100dvh; line-height: 1.6; font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text); background-color: var(--color-bg); }
+    img, svg { display: block; max-width: 100%; height: auto; }
+    ul[role="list"] { list-style: none; }
+    a, button, [role="button"] { transition: color var(--transition-interactive), background var(--transition-interactive), border-color var(--transition-interactive), box-shadow var(--transition-interactive); }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 1100px; margin-inline: auto; padding-inline: var(--space-6); }
+    .container--wide { max-width: 1280px; margin-inline: auto; padding-inline: var(--space-6); }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in oklch, var(--color-bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid oklch(from var(--color-text) l c h / 0.06);
+      padding: var(--space-4) 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+    .nav-logo { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; color: var(--color-text); font-family: var(--font-display); font-size: var(--text-lg); }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-6); list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--color-text-muted); font-size: var(--text-sm); font-weight: 500; letter-spacing: 0.01em; }
+    .nav-links a:hover { color: var(--color-text); }
+    .nav-actions { display: flex; align-items: center; gap: var(--space-3); }
+    .btn-theme { background: none; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-2); color: var(--color-text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-theme:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+    .btn-cta { background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); padding: var(--space-2) var(--space-5); font-size: var(--text-sm); font-weight: 600; text-decoration: none; cursor: pointer; }
+    .btn-cta:hover { background: var(--color-primary-hover); }
+
+    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding-block: clamp(var(--space-16), 10vw, var(--space-24));
+      border-bottom: 1px solid var(--color-divider);
+    }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center; }
+    @media (max-width: 768px) { .hero-grid { grid-template-columns: 1fr; } }
+
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary); margin-bottom: var(--space-5); }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--color-primary); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+    .hero-title { font-family: var(--font-display); font-size: var(--text-3xl); line-height: 1.05; color: var(--color-text); margin-bottom: var(--space-5); }
+    .hero-title em { font-style: italic; color: var(--color-primary); }
+    .hero-subtitle { font-size: var(--text-base); color: var(--color-text-muted); max-width: 52ch; line-height: 1.7; margin-bottom: var(--space-8); }
+    .hero-ctas { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+    .btn-primary { background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); padding: var(--space-3) var(--space-6); font-size: var(--text-sm); font-weight: 600; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-2); }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-secondary { background: transparent; color: var(--color-text); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3) var(--space-6); font-size: var(--text-sm); font-weight: 600; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-2); }
+    .btn-secondary:hover { border-color: var(--color-text-muted); background: var(--color-surface); }
+
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    .hero-stat { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-5); text-align: center; }
+    .hero-stat-num { font-family: var(--font-display); font-size: var(--text-2xl); color: var(--color-primary); line-height: 1; }
+    .hero-stat-label { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ===== SECTION SHARED ===== */
+    .section { padding-block: clamp(var(--space-12), 7vw, var(--space-20)); }
+    .section-header { margin-bottom: var(--space-10); }
+    .section-tag { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary); margin-bottom: var(--space-3); }
+    .section-title { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); margin-bottom: var(--space-3); }
+    .section-desc { font-size: var(--text-base); color: var(--color-text-muted); max-width: 55ch; line-height: 1.7; }
+
+    /* ===== OFFERS DASHBOARD ===== */
+    .offers { background: var(--color-surface); border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider); }
+    .availability-notice {
+      background: color-mix(in oklch, var(--color-orange) 14%, var(--color-bg));
+      border: 1px solid color-mix(in oklch, var(--color-orange) 45%, var(--color-border));
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
+      box-shadow: var(--shadow-sm);
+    }
+    .availability-notice-title {
+      font-size: var(--text-base);
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: var(--space-2);
+    }
+    .availability-notice-text {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      max-width: 85ch;
+    }
+    .offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    @media (max-width: 900px) { .offers-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .offers-grid { grid-template-columns: 1fr; } }
+
+    .offer-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      cursor: default;
+      transition: box-shadow var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .offer-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .offer-card.featured { grid-column: span 2; background: color-mix(in oklch, var(--color-primary) 8%, var(--color-bg)); border-color: color-mix(in oklch, var(--color-primary) 30%, var(--color-border)); }
+    @media (max-width: 900px) { .offer-card.featured { grid-column: span 1; } }
+
+    .offer-icon { width: 40px; height: 40px; border-radius: var(--radius-lg); background: color-mix(in oklch, var(--color-primary) 12%, var(--color-surface)); display: flex; align-items: center; justify-content: center; color: var(--color-primary); margin-bottom: var(--space-4); }
+    .offer-icon.gold { background: color-mix(in oklch, var(--color-gold) 12%, var(--color-surface)); color: var(--color-gold); }
+    .offer-icon.blue { background: color-mix(in oklch, var(--color-blue) 12%, var(--color-surface)); color: var(--color-blue); }
+    .offer-icon.purple { background: color-mix(in oklch, var(--color-purple) 12%, var(--color-surface)); color: var(--color-purple); }
+    .offer-icon.orange { background: color-mix(in oklch, var(--color-orange) 12%, var(--color-surface)); color: var(--color-orange); }
+    .offer-icon.success { background: color-mix(in oklch, var(--color-success) 12%, var(--color-surface)); color: var(--color-success); }
+
+    .offer-title { font-size: var(--text-lg); font-weight: 700; color: var(--color-text); margin-bottom: var(--space-2); }
+    .offer-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; margin-bottom: var(--space-4); }
+    .offer-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .tag { font-size: var(--text-xs); font-weight: 600; padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: var(--color-surface-offset); color: var(--color-text-muted); border: 1px solid var(--color-divider); }
+    .tag.accent { background: color-mix(in oklch, var(--color-primary) 10%, var(--color-surface)); color: var(--color-primary); border-color: color-mix(in oklch, var(--color-primary) 25%, var(--color-border)); }
+    .offer-link { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-xs); font-weight: 600; color: var(--color-primary); text-decoration: none; margin-top: var(--space-4); }
+    .offer-link:hover { color: var(--color-primary-hover); }
+
+    /* ===== BUSINESSES ===== */
+    .biz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+    @media (max-width: 640px) { .biz-grid { grid-template-columns: 1fr; } }
+
+    .biz-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      text-decoration: none;
+      color: inherit;
+      display: flex; flex-direction: column; gap: var(--space-4);
+      transition: box-shadow var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .biz-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .biz-card-header { display: flex; align-items: center; justify-content: space-between; }
+    .biz-badge { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); background: color-mix(in oklch, var(--color-primary) 10%, var(--color-surface)); color: var(--color-primary); border: 1px solid color-mix(in oklch, var(--color-primary) 25%, var(--color-border)); }
+    .biz-badge.github { background: color-mix(in oklch, var(--color-text) 8%, var(--color-surface)); color: var(--color-text-muted); border-color: var(--color-border); }
+    .biz-name { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); }
+    .biz-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.65; }
+    .biz-meta { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text-faint); margin-top: auto; }
+
+    /* ===== PHD RESEARCH ===== */
+    .phd-section { background: color-mix(in oklch, var(--color-primary) 5%, var(--color-bg)); border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider); }
+    .phd-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: var(--space-12); align-items: start; }
+    @media (max-width: 768px) { .phd-grid { grid-template-columns: 1fr; } }
+
+    .phd-progress-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-6); }
+    .phd-progress-label { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+    .phd-progress-title { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-text); margin-bottom: var(--space-4); line-height: 1.3; }
+    .progress-bar-wrap { background: var(--color-surface-offset); border-radius: var(--radius-full); height: 8px; overflow: hidden; margin-bottom: var(--space-2); }
+    .progress-bar-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(in oklab, var(--color-primary), var(--color-blue)); width: 55%; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--color-text-muted); }
+
+    .phd-milestones { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-5); }
+    .milestone { display: flex; gap: var(--space-3); align-items: flex-start; }
+    .milestone-dot { width: 8px; height: 8px; border-radius: var(--radius-full); flex-shrink: 0; margin-top: 6px; }
+    .milestone-dot.done { background: var(--color-success); }
+    .milestone-dot.active { background: var(--color-primary); animation: pulse 2s ease-in-out infinite; }
+    .milestone-dot.pending { background: var(--color-text-faint); }
+    .milestone-text { font-size: var(--text-sm); color: var(--color-text-muted); }
+    .milestone-text strong { color: var(--color-text); font-weight: 600; }
+
+    .phd-themes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    @media (max-width: 480px) { .phd-themes { grid-template-columns: 1fr; } }
+    .theme-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-5); }
+    .theme-number { font-family: var(--font-display); font-size: var(--text-2xl); color: color-mix(in oklch, var(--color-primary) 25%, var(--color-text-faint)); line-height: 1; margin-bottom: var(--space-2); }
+    .theme-name { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); margin-bottom: var(--space-1); }
+    .theme-desc { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.55; }
+
+    /* ===== GITHUB PROJECTS ===== */
+    .gh-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    @media (max-width: 900px) { .gh-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .gh-grid { grid-template-columns: 1fr; } }
+
+    .gh-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      text-decoration: none; color: inherit;
+      transition: box-shadow var(--transition-interactive), transform var(--transition-interactive);
+      display: flex; flex-direction: column; gap: var(--space-3);
+    }
+    .gh-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .gh-card-header { display: flex; align-items: center; gap: var(--space-3); }
+    .gh-icon { color: var(--color-primary); }
+    .gh-name { font-weight: 700; font-size: var(--text-sm); color: var(--color-text); }
+    .gh-desc { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.55; flex: 1; }
+    .gh-lang { display: flex; align-items: center; gap: var(--space-1); font-size: var(--text-xs); color: var(--color-text-faint); margin-top: auto; }
+    .lang-dot { width: 8px; height: 8px; border-radius: var(--radius-full); }
+    .gh-status {
+      align-self: flex-start;
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      background: color-mix(in oklch, var(--color-orange) 14%, var(--color-surface));
+      color: var(--color-orange);
+      border: 1px solid color-mix(in oklch, var(--color-orange) 35%, var(--color-border));
+    }
+
+    /* ===== CONTACT ===== */
+    .contact { border-top: 1px solid var(--color-divider); }
+    .contact-inner { text-align: center; max-width: 560px; margin: 0 auto; }
+    .contact-title { font-family: var(--font-display); font-size: var(--text-2xl); color: var(--color-text); margin-bottom: var(--space-4); }
+    .contact-subtitle { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.65; margin-bottom: var(--space-8); }
+    .contact-links { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-4); }
+    .contact-link { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 600; color: var(--color-text-muted); text-decoration: none; padding: var(--space-3) var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+    .contact-link:hover { color: var(--color-text); border-color: var(--color-text-muted); background: var(--color-surface); }
+
+    /* ===== FOOTER ===== */
+    .footer { padding: var(--space-8) 0; border-top: 1px solid var(--color-divider); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); }
+    .footer-text { font-size: var(--text-xs); color: var(--color-text-faint); }
+    .footer-links { display: flex; gap: var(--space-5); }
+    .footer-links a { font-size: var(--text-xs); color: var(--color-text-faint); text-decoration: none; }
+    .footer-links a:hover { color: var(--color-text-muted); }
+
+    /* ===== SKIP LINK ===== */
+    .skip-link { position: absolute; left:-9999px; top: var(--space-4); }
+    .skip-link:focus { left: var(--space-4); background: var(--color-primary); color: #fff; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); z-index: 200; }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- NAV -->
+<header class="nav" role="banner">
+  <nav class="container nav-inner" aria-label="Main navigation">
+    <!-- SVG Logo: geometric "EL" mark — two interlocking bars -->
+    <a href="#" class="nav-logo" aria-label="Elias Lenz home">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="28" height="28" rx="7" fill="var(--color-primary)" opacity="0.15"/>
+        <path d="M8 22V10h10" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 16h7" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M16 22V14l8-4" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+      </svg>
+      Elias Lenz
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#offers">Offers</a></li>
+      <li><a href="#businesses">Ventures</a></li>
+      <li><a href="#research">PhD Research</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-theme" data-theme-toggle aria-label="Switch to light mode">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <a href="mailto:contact@elbconsultingtech.com" class="btn-cta">Get in touch</a>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<main id="main">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Filderstadt, Baden-Wurttemberg, Germany · Available for consulting</div>
+      <h1 class="hero-title">Security.<br><em>Strategy.</em><br>Policy-as-Code.</h1>
+      <p class="hero-subtitle">Management consultant, cybersecurity architect, and PhD researcher bridging governance frameworks with automated infrastructure — building the next generation of policy-driven DevSecOps.</p>
+      <div class="hero-ctas">
+        <a href="#businesses" class="btn-primary"><i data-lucide="building-2" width="16" height="16"></i> My Ventures</a>
+        <a href="#research" class="btn-secondary"><i data-lucide="book-open" width="16" height="16"></i> PhD Research</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat reveal">
+        <div class="hero-stat-num">15+</div>
+        <div class="hero-stat-label">Years in public sector & consulting</div>
+      </div>
+      <div class="hero-stat reveal">
+        <div class="hero-stat-num">MSc</div>
+        <div class="hero-stat-label">Information Security</div>
+      </div>
+      <div class="hero-stat reveal">
+        <div class="hero-stat-num">MBA</div>
+        <div class="hero-stat-label">International Management</div>
+      </div>
+      <div class="hero-stat reveal" style="grid-column: span 2;">
+        <div class="hero-stat-num" style="font-size: var(--text-xl);">PhD 2031</div>
+        <div class="hero-stat-label">Policy-as-Code & Governance Compilers</div>
+      </div>
+      <div class="hero-stat reveal">
+        <div class="hero-stat-num">PaC</div>
+        <div class="hero-stat-label">Policy-as-Code Expert</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFERS DASHBOARD -->
+<section class="offers section" id="offers">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">What I Offer</div>
+      <h2 class="section-title">Core Service Areas</h2>
+      <p class="section-desc">From strategic consulting to hands-on infrastructure automation — a full-spectrum offer across governance, security, and cloud architecture.</p>
+    </div>
+    <div class="availability-notice reveal">
+      <div class="availability-notice-title">⚠️ Important Notice</div>
+      <div class="availability-notice-text">Consulting is a secondary activity. My primary employer always takes priority. Consulting engagements are available by appointment only or on Saturdays. Please plan accordingly when reaching out.</div>
+    </div>
+    <div class="offers-grid">
+      <div class="offer-card featured reveal">
+        <div class="offer-icon"><i data-lucide="shield-check" width="20" height="20"></i></div>
+        <div class="offer-title">DevSecOps & Cybersecurity Consulting</div>
+        <div class="offer-desc">End-to-end DevSecOps framework design, security governance automation, and compliance-as-code implementation. BSI-aligned processes for critical infrastructure and enterprise teams.</div>
+        <div class="offer-tags">
+          <span class="tag accent">Policy-as-Code</span>
+          <span class="tag">BSI Standards</span>
+          <span class="tag">Zero Trust</span>
+          <span class="tag">Secure by Design</span>
+          <span class="tag">Threat Modelling</span>
+        </div>
+        <a href="#contact" class="offer-link">Request a consultation <i data-lucide="arrow-right" width="12" height="12"></i></a>
+      </div>
+      <div class="offer-card reveal">
+        <div class="offer-icon gold"><i data-lucide="layers" width="20" height="20"></i></div>
+        <div class="offer-title">Infrastructure as Code</div>
+        <div class="offer-desc">Terraform-based cloud infrastructure design on Hetzner, automated provisioning, GitOps pipelines, and full IaC governance frameworks.</div>
+        <div class="offer-tags">
+          <span class="tag">Terraform</span>
+          <span class="tag">GitOps</span>
+          <span class="tag">Hetzner Cloud</span>
+        </div>
+      </div>
+      <div class="offer-card reveal">
+        <div class="offer-icon blue"><i data-lucide="git-branch" width="20" height="20"></i></div>
+        <div class="offer-title">CI/CD & Automation</div>
+        <div class="offer-desc">GitHub Actions pipeline design, containerised workflows, Docker/Kubernetes orchestration, and automated compliance gates for regulated environments.</div>
+        <div class="offer-tags">
+          <span class="tag">GitHub Actions</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Kubernetes</span>
+        </div>
+      </div>
+      <div class="offer-card reveal">
+        <div class="offer-icon purple"><i data-lucide="file-code-2" width="20" height="20"></i></div>
+        <div class="offer-title">Policy-as-Code Implementation</div>
+        <div class="offer-desc">Translating governance and compliance requirements into machine-readable, automatically enforced code policies across cloud and on-premise environments.</div>
+        <div class="offer-tags">
+          <span class="tag accent">PaC</span>
+          <span class="tag">OPA/Rego</span>
+          <span class="tag">Sentinel</span>
+        </div>
+      </div>
+      <div class="offer-card reveal">
+        <div class="offer-icon orange"><i data-lucide="bar-chart-3" width="20" height="20"></i></div>
+        <div class="offer-title">Management Consulting</div>
+        <div class="offer-desc">Strategic advisory for digitalisation, security posture improvement, and technology governance. Specialised in public sector and mid-size enterprise transformation.</div>
+        <div class="offer-tags">
+          <span class="tag">Strategy</span>
+          <span class="tag">Digital Transformation</span>
+        </div>
+      </div>
+      <div class="offer-card reveal">
+        <div class="offer-icon success"><i data-lucide="search-code" width="20" height="20"></i></div>
+        <div class="offer-title">Security Auditing</div>
+        <div class="offer-desc">Automated and manual security audits with the SecurityAuditor dashboard. BinBot binary analysis, vulnerability reporting, and remediation roadmaps.</div>
+        <div class="offer-tags">
+          <span class="tag">SecurityAuditor</span>
+          <span class="tag">BinBot</span>
+          <span class="tag">SAST/DAST</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESSES -->
+<section class="section" id="businesses">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">Ventures</div>
+      <h2 class="section-title">Active Businesses</h2>
+      <p class="section-desc">Registered entities and active ventures — each with a distinct focus and online presence.</p>
+    </div>
+    <div class="biz-grid">
+      <a href="https://bridgeaxis-consulting.de/" target="_blank" rel="noopener noreferrer" class="biz-card reveal">
+        <div class="biz-card-header">
+          <span class="biz-badge">Live Website</span>
+          <i data-lucide="external-link" width="16" height="16" style="color: var(--color-text-faint);"></i>
+        </div>
+        <div class="biz-name">BridgeAxis Consulting</div>
+        <div class="biz-desc">UG (haftungsbeschränkt) · Management consulting and cybersecurity services firm based in Filderstadt, Baden-Wurttemberg, Germany. Specialising in DevSecOps, Policy-as-Code, and security governance for enterprise and public sector clients.</div>
+        <div class="biz-meta"><i data-lucide="map-pin" width="12" height="12"></i> Filderstadt, Baden-Wurttemberg, Germany &nbsp;·&nbsp; Founded 2024</div>
+      </a>
+      <a href="https://eliaslenz-mbaberatung.de/" target="_blank" rel="noopener noreferrer" class="biz-card reveal">
+        <div class="biz-card-header">
+          <span class="biz-badge">Website</span>
+          <i data-lucide="external-link" width="16" height="16" style="color: var(--color-text-faint);"></i>
+        </div>
+        <div class="biz-name">Elias Lenz MBA Beratung</div>
+        <div class="biz-desc">Independent consulting practice built on MBA International Management and 15+ years of public sector experience. Offering strategic advisory, digital transformation projects, and executive-level cybersecurity consulting.</div>
+        <div class="biz-meta"><i data-lucide="briefcase" width="12" height="12"></i> Independent · MBA International Management</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PHD RESEARCH -->
+<section class="phd-section section" id="research">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">Academic Research</div>
+      <h2 class="section-title">Ongoing PhD Research</h2>
+      <p class="section-desc">Part-time, self-sponsored distance learning doctoral research at the University of Plymouth, focused on automating governance with Policy-as-Code compilers. Expected completion 2031.</p>
+    </div>
+    <div class="phd-grid">
+      <!-- Left: Progress card -->
+      <div>
+        <div class="phd-progress-card reveal">
+          <div class="phd-progress-label">Doctoral Thesis · In Progress</div>
+          <div class="phd-progress-title">Governance-to-Policy Compilers: Automating Compliance through Policy-as-Code</div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+          <div class="progress-meta"><span>~55% complete</span><span>Expected 2031</span></div>
+          <div class="phd-milestones">
+            <div class="milestone"><div class="milestone-dot done"></div><div class="milestone-text"><strong>Research framework</strong> — defined and approved</div></div>
+            <div class="milestone"><div class="milestone-dot done"></div><div class="milestone-text"><strong>Literature review</strong> — PaC, governance compilers, DevSecOps</div></div>
+            <div class="milestone"><div class="milestone-dot done"></div><div class="milestone-text"><strong>PaCHumanCentricPrototype</strong> — human-centric PaC demo built</div></div>
+            <div class="milestone"><div class="milestone-dot active"></div><div class="milestone-text"><strong>CyberAI2026</strong> — paper series in progress (June 2026)</div></div>
+            <div class="milestone"><div class="milestone-dot pending"></div><div class="milestone-text"><strong>Thesis writing</strong> — structured submission</div></div>
+            <div class="milestone"><div class="milestone-dot pending"></div><div class="milestone-text"><strong>Defence &amp; publication</strong> — target 2031</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Research themes -->
+      <div>
+        <div class="phd-themes reveal">
+          <div class="theme-card">
+            <div class="theme-number">01</div>
+            <div class="theme-name">Policy-as-Code Automation</div>
+            <div class="theme-desc">Designing compilers that translate human-readable governance requirements into machine-enforceable policy code across cloud environments.</div>
+          </div>
+          <div class="theme-card">
+            <div class="theme-number">02</div>
+            <div class="theme-name">Governance Compilers</div>
+            <div class="theme-desc">Novel architectural patterns for converting regulatory frameworks (GDPR, BSI, ISO 27001) into automated, continuously tested policy artefacts.</div>
+          </div>
+          <div class="theme-card">
+            <div class="theme-number">03</div>
+            <div class="theme-name">Human-Centric PaC</div>
+            <div class="theme-desc">Bridging the usability gap — making policy-as-code accessible to non-technical governance stakeholders without sacrificing machine enforceability.</div>
+          </div>
+          <div class="theme-card">
+            <div class="theme-number">04</div>
+            <div class="theme-name">Secure by Design</div>
+            <div class="theme-desc">Embedding security and compliance as first-class artefacts in the software development lifecycle via shift-left automation frameworks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GITHUB PROJECTS -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">Open Source & GitHub</div>
+      <h2 class="section-title">Active Projects</h2>
+      <p class="section-desc">Public repositories and tooling — from infrastructure automation to security auditing dashboards.</p>
+    </div>
+    <div class="gh-grid">
+      <a href="https://github.com/LGLenz/PaCTerraformPaC" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="folder-code" width="18" height="18"></i><div class="gh-name">PaCTerraformPaC</div></div>
+        <div class="gh-desc">Infrastructure automation framework combining Terraform with Policy-as-Code enforcement. Core tooling for the PhD research prototype.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#e37933;"></div>HCL / Terraform</div>
+      </a>
+      <a href="https://github.com/LGLenz/PaCHumanCentricPrototype" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="users" width="18" height="18"></i><div class="gh-name">PaCHumanCentricPrototype</div></div>
+        <div class="gh-status">Private / Coming Soon</div>
+        <div class="gh-desc">Human-centric Policy-as-Code demo — making governance automation accessible to non-technical policy authors.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#3572A5;"></div>Python / YAML</div>
+      </a>
+      <a href="https://github.com/LGLenz/SecurityAuditor" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="scan-search" width="18" height="18"></i><div class="gh-name">SecurityAuditor</div></div>
+        <div class="gh-status">Private / Coming Soon</div>
+        <div class="gh-desc">Automated security auditing dashboard. Vulnerability scanning, compliance reporting, and remediation roadmap generation.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#f1e05a;"></div>JavaScript / TypeScript</div>
+      </a>
+      <a href="https://github.com/LGLenz/BinBot" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="cpu" width="18" height="18"></i><div class="gh-name">BinBot</div></div>
+        <div class="gh-status">Private / Coming Soon</div>
+        <div class="gh-desc">Automated binary analysis tooling. Detects vulnerabilities, extracts metadata, and integrates with CI/CD security gates.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#3572A5;"></div>Python</div>
+      </a>
+      <a href="https://github.com/LGLenz/LGLenz.github.io" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="globe" width="18" height="18"></i><div class="gh-name">BridgeAxis Website</div></div>
+        <div class="gh-desc">Source for the BridgeAxis Consulting brand site — static HTML/CSS, hosted and version-controlled on GitHub.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#e34c26;"></div>HTML / CSS</div>
+      </a>
+      <a href="https://github.com/LGLenz" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="github" width="18" height="18"></i><div class="gh-name">More on GitHub</div></div>
+        <div class="gh-desc">Additional tooling, research artefacts, and DevSecOps experiments across public and private repositories.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#4f98a3;"></div>Various</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact section" id="contact">
+  <div class="container">
+    <div class="contact-inner reveal">
+      <h2 class="contact-title">Let's Build Something Secure</h2>
+      <p class="contact-subtitle">Whether you need DevSecOps strategy, Policy-as-Code implementation, or a security audit — reach out directly. Based in Filderstadt, working internationally.</p>
+      <div class="contact-links">
+        <a href="mailto:contact@elbconsultingtech.com" class="contact-link"><i data-lucide="mail" width="16" height="16"></i> contact@elbconsultingtech.com</a>
+        <a href="https://bridgeaxis-consulting.de/" target="_blank" rel="noopener noreferrer" class="contact-link"><i data-lucide="globe" width="16" height="16"></i> bridgeaxis-consulting.de</a>
+        <a href="https://github.com/LGLenz" target="_blank" rel="noopener noreferrer" class="contact-link"><i data-lucide="github" width="16" height="16"></i> GitHub</a>
+        <a href="https://www.linkedin.com/in/lielias-lenz-cybersecurity-phd" target="_blank" rel="noopener noreferrer" class="contact-link"><i data-lucide="linkedin" width="16" height="16"></i> LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <p class="footer-text">© 2026 Elias Lenz · BridgeAxis Consulting UG (haftungsbeschränkt) · Filderstadt, Baden-Wurttemberg, Germany</p>
+    <div class="footer-links">
+      <a href="https://bridgeaxis-consulting.de/" target="_blank" rel="noopener noreferrer">BridgeAxis</a>
+      <a href="https://github.com/LGLenz" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="mailto:contact@elbconsultingtech.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Icons
+  lucide.createIcons();
+
+  // Theme toggle
+  (function(){
+    const t = document.querySelector('[data-theme-toggle]');
+    const r = document.documentElement;
+    let d = r.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    r.setAttribute('data-theme', d);
+    function updateIcon(){
+      if(!t) return;
+      t.innerHTML = d === 'dark'
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      t.setAttribute('aria-label', 'Switch to ' + (d === 'dark' ? 'light' : 'dark') + ' mode');
+    }
+    updateIcon();
+    if(t) t.addEventListener('click', () => {
+      d = d === 'dark' ? 'light' : 'dark';
+      r.setAttribute('data-theme', d);
+      updateIcon();
+      lucide.createIcons();
+    });
+  })();
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
