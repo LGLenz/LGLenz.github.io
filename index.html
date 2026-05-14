@@ -291,6 +291,11 @@
       color: var(--color-orange);
       border: 1px solid color-mix(in oklch, var(--color-orange) 35%, var(--color-border));
     }
+    .gh-status.live {
+      background: color-mix(in oklch, var(--color-success) 14%, var(--color-surface));
+      color: var(--color-success);
+      border-color: color-mix(in oklch, var(--color-success) 35%, var(--color-border));
+    }
 
     /* ===== CONTACT ===== */
     .contact { border-top: 1px solid var(--color-divider); }
@@ -563,6 +568,12 @@
       <p class="section-desc">Public repositories and tooling — from infrastructure automation to security auditing dashboards.</p>
     </div>
     <div class="gh-grid">
+      <a href="https://www.perplexity.ai/computer/a/demo-access-console-hQnXQt50Rom0Mlt73ziGww" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="key-round" width="18" height="18"></i><div class="gh-name">Demo Access Console</div></div>
+        <div class="gh-status live">Live Demo</div>
+        <div class="gh-desc">Lightweight test-flow console for issuing temporary demo codes, expiring them automatically, invalidating access when a demo ends, and exporting an audit CSV for enforceable access rules.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#4f98a3;"></div>Deployed Demo</div>
+      </a>
       <a href="https://github.com/LGLenz/PaCTerraformPaC" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
         <div class="gh-card-header"><i class="gh-icon" data-lucide="folder-code" width="18" height="18"></i><div class="gh-name">PaCTerraformPaC</div></div>
         <div class="gh-desc">Infrastructure automation framework combining Terraform with Policy-as-Code enforcement. Core tooling for the PhD research prototype.</div>
