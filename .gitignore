@@ -1,0 +1,17 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Build / artifact noise
+__pycache__/
+*.pyc
+*.log
+
+# Local-only
+.env
+.env.*
+!.env.example
