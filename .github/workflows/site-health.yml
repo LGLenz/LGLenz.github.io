@@ -1,0 +1,72 @@
+name: Site Health (Post-deploy + Scheduled)
+
+# Verifies that the live site is reachable and correctly configured.
+#
+# Runs:
+#   - On-demand (workflow_dispatch)
+#   - On schedule (every 6h)
+#   - After Deploy GitHub Pages workflow completes (smoke test)
+#
+# Targets:
+#   - https://lglenz.github.io/   (root user Pages — required)
+#
+# This workflow uses NO secrets and is read-only.
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 6 hours, off the hour to avoid the API rush.
+    - cron: "23 */6 * * *"
+  workflow_run:
+    workflows: ["Deploy GitHub Pages (Production)"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: site-health
+  cancel-in-progress: false
+
+jobs:
+  http-check:
+    name: HTTP / TLS / title smoke test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - url: "https://lglenz.github.io/"
+            label: "root-pages"
+            required: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Probe ${{ matrix.target.label }} (${{ matrix.target.url }})
+        env:
+          TARGET_URL: ${{ matrix.target.url }}
+          TARGET_LABEL: ${{ matrix.target.label }}
+          REQUIRED: ${{ matrix.target.required }}
+        run: |
+          set -uo pipefail
+          bash scripts/site_health.sh "$TARGET_URL" "$TARGET_LABEL" "$REQUIRED"
+
+  open-issue-on-failure:
+    name: Open tracking issue on failure
+    needs: [http-check]
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh issue create \
+            --repo "${{ github.repository }}" \
+            --title "Site health: scheduled run failed ($(date -u +%Y-%m-%dT%H:%MZ))" \
+            --label "site-health" \
+            --body "Scheduled site-health run failed. See the workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            || echo "Issue creation failed (label may not exist or permissions insufficient) — not blocking."

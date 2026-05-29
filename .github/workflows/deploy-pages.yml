@@ -1,0 +1,86 @@
+name: Deploy GitHub Pages (Production)
+
+# Deploys the static site to GitHub Pages and records a GitHub deployment
+# status for the "production" environment.
+#
+# Triggers:
+#   - push to main (auto-deploy)
+#   - workflow_dispatch (manual deploy)
+#
+# Notes for this repo (LGLenz/LGLenz.github.io):
+#   - This is a user/root Pages site served at https://lglenz.github.io/.
+#   - To use this workflow as the deployment source, set
+#     Settings → Pages → Build and deployment → Source = "GitHub Actions".
+#     Until that is set, GitHub Pages will keep deploying from the default
+#     branch and this workflow's "deploy" step will fail with a clear error;
+#     no site downtime occurs in that case.
+#
+# Governance:
+#   - The "production" environment should be configured in repository settings
+#     with required reviewers and/or wait timers if human approval is desired.
+#   - This workflow uses only official GitHub-maintained actions for Pages.
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  deployments: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Pages artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Enforce HTTPS on GitHub Pages
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method PATCH /repos/${{ github.repository }}/pages \
+            --field https_enforced=true \
+            --silent \
+            && echo "HTTPS enforcement enabled." \
+            || echo "Warning: HTTPS enforcement API call failed (certificate may not yet be provisioned or already enabled)."
+
+      - name: Summarise deployment
+        run: |
+          {
+            echo "## GitHub Pages deployment"
+            echo ""
+            echo "- Environment: production"
+            echo "- URL: ${{ steps.deployment.outputs.page_url }}"
+            echo "- Commit: ${{ github.sha }}"
+            echo "- Triggered by: ${{ github.event_name }}"
+          } >> "$GITHUB_STEP_SUMMARY"

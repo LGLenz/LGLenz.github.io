@@ -1,0 +1,282 @@
+name: PR Mandatory Checks
+
+# Mandatory, fast checks run on every pull request and on every push to main.
+# These job names are intended to be referenced by GitHub branch protection
+# so that they become required status checks (see docs/Operating-Model.md).
+#
+# Design goals:
+#   - No secrets required.
+#   - All jobs are read-only.
+#   - Each job is a small, independently-required check.
+#   - Failure is informative, not noisy.
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-validation:
+    name: Install / tooling validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify repository layout
+        run: |
+          set -euo pipefail
+          required=(
+            "index.html"
+            "README.md"
+            ".github/workflows"
+          )
+          missing=0
+          for path in "${required[@]}"; do
+            if [ ! -e "$path" ]; then
+              echo "::error file=$path::Required path missing"
+              missing=$((missing + 1))
+            else
+              echo "ok: $path"
+            fi
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "Repository layout invalid — $missing required path(s) missing."
+            exit 1
+          fi
+
+      - name: Install lightweight validators
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            tidy yamllint shellcheck libxml2-utils
+
+      - name: Print tool versions
+        run: |
+          tidy -v || true
+          yamllint --version || true
+          shellcheck --version || true
+          xmllint --version 2>&1 | head -2 || true
+
+  build-validation:
+    name: Build / artifact validation
+    runs-on: ubuntu-latest
+    needs: install-validation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages (build artifact dry-run)
+        uses: actions/configure-pages@v5
+        with:
+          # Don't fail the PR check if Pages source isn't yet set to
+          # "GitHub Actions" — this job only validates that the artifact
+          # can be built and uploaded, not that the repo is wired for
+          # workflow-source deploys.
+          enablement: false
+
+      - name: Upload artifact (validates Pages build will succeed)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Sanity-check index.html
+        run: |
+          set -euo pipefail
+          if [ ! -s index.html ]; then
+            echo "::error file=index.html::index.html is missing or empty"
+            exit 1
+          fi
+          if ! grep -qiE '<title[^>]*>[^<]*</title>' index.html; then
+            echo "::error file=index.html::No <title> element found"
+            exit 1
+          fi
+          echo "index.html ok ($(wc -c < index.html) bytes)"
+
+  lint:
+    name: Lint / static validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install linters
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            tidy yamllint shellcheck libxml2-utils
+
+      - name: Lint YAML (workflows + repo)
+        run: |
+          set -euo pipefail
+          # Relaxed config: only fail on syntax-level issues, not stylistic ones.
+          cat > /tmp/yamllint.yml <<'YAML'
+          extends: relaxed
+          rules:
+            line-length: disable
+            truthy: disable
+            comments: disable
+            comments-indentation: disable
+            document-start: disable
+            indentation: disable
+            empty-lines: disable
+            new-line-at-end-of-file: disable
+            trailing-spaces: disable
+          YAML
+          yamllint -c /tmp/yamllint.yml .github/ || exit 1
+
+      - name: Shellcheck embedded scripts
+        run: |
+          set -euo pipefail
+          found=$(git ls-files '*.sh' || true)
+          if [ -z "$found" ]; then
+            echo "No .sh files to lint."
+            exit 0
+          fi
+          echo "$found" | xargs shellcheck -S warning
+
+      - name: Validate XML files (if any)
+        run: |
+          set -euo pipefail
+          xml_files=$(git ls-files '*.xml' || true)
+          if [ -z "$xml_files" ]; then
+            echo "No XML files to validate."
+            exit 0
+          fi
+          rc=0
+          for f in $xml_files; do
+            echo "xmllint --noout $f"
+            xmllint --noout "$f" || rc=1
+          done
+          exit "$rc"
+
+      - name: HTML tidy (non-blocking warnings, blocking errors)
+        run: |
+          set -euo pipefail
+          errors=0
+          for f in $(git ls-files '*.html'); do
+            echo "::group::tidy $f"
+            # tidy exits: 0 ok, 1 warnings, 2 errors. We block on 2.
+            set +e
+            tidy -q -e --gnu-emacs yes "$f"
+            rc=$?
+            set -e
+            echo "::endgroup::"
+            if [ "$rc" -ge 2 ]; then
+              echo "::error file=$f::tidy reported errors (exit $rc)"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ "$errors" -gt 0 ]; then
+            echo "$errors HTML file(s) had blocking errors."
+            exit 1
+          fi
+
+  link-sanity:
+    name: Link / site artifact sanity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify internal links / asset references resolve on disk
+        run: |
+          set -euo pipefail
+          # For each HTML file, extract local href/src targets (no http(s):,
+          # no mailto:, no #fragment-only) and verify they exist in the repo.
+          rc=0
+          for f in $(git ls-files '*.html'); do
+            grep -oE '(href|src)="[^"]+"' "$f" \
+              | sed -E 's/(href|src)="([^"]*)"/\2/' \
+              | while IFS= read -r target; do
+                  case "$target" in
+                    http://*|https://*|mailto:*|tel:*|data:*|"#"*|"") continue ;;
+                  esac
+                  path="${target%%\?*}"
+                  path="${path%%#*}"
+                  path="${path#/}"
+                  if [ -z "$path" ]; then continue; fi
+                  if [ ! -e "$path" ]; then
+                    echo "::error file=$f::Broken internal reference: $target (resolved to '$path')"
+                    rc=1
+                  fi
+                done
+          done
+          exit "$rc"
+
+  secrets-config:
+    name: No-secrets / config sanity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks (best-effort, no auth)
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+        env:
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
+          GITLEAKS_ENABLE_SUMMARY: "true"
+
+      - name: Heuristic secret pattern check (blocking)
+        run: |
+          set -euo pipefail
+          # Patterns we never want committed in this static-site repo.
+          # Kept narrow to avoid false positives.
+          patterns=(
+            'AKIA[0-9A-Z]{16}'                  # AWS access key id
+            '-----BEGIN (RSA|EC|OPENSSH) PRIVATE KEY-----'
+            'ghp_[A-Za-z0-9]{36,}'              # GitHub PAT
+            'xox[baprs]-[A-Za-z0-9-]{10,}'      # Slack
+            'AIza[0-9A-Za-z_-]{35}'             # Google API key
+          )
+          rc=0
+          for p in "${patterns[@]}"; do
+            hits=$(git grep -nE "$p" -- ':!.github/workflows/pr-checks.yml' ':!*.lock' || true)
+            if [ -n "$hits" ]; then
+              echo "::error::Secret-like pattern '$p' found:"
+              echo "$hits"
+              rc=1
+            fi
+          done
+          exit "$rc"
+
+      - name: Validate workflow files parse
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import sys, yaml, glob
+          bad = 0
+          for path in sorted(glob.glob(".github/workflows/*.yml")):
+              try:
+                  with open(path, "r", encoding="utf-8") as f:
+                      yaml.safe_load(f)
+                  print(f"ok: {path}")
+              except yaml.YAMLError as e:
+                  print(f"::error file={path}::YAML parse error: {e}")
+                  bad += 1
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Verify expected config files
+        run: |
+          set -euo pipefail
+          for f in README.md index.html; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Required config file missing"
+              exit 1
+            fi
+          done
+          echo "All required config files present."
