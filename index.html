@@ -273,6 +273,8 @@
       display: flex; flex-direction: column; gap: var(--space-3);
     }
     .gh-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .gh-card.static { cursor: default; }
+    .gh-card.static:hover { box-shadow: none; transform: none; }
     .gh-card-header { display: flex; align-items: center; gap: var(--space-3); }
     .gh-icon { color: var(--color-primary); }
     .gh-name { font-weight: 700; font-size: var(--text-sm); color: var(--color-text); }
@@ -344,6 +346,7 @@
       <li><a href="#offers">Offers</a></li>
       <li><a href="#businesses">Ventures</a></li>
       <li><a href="#research">PhD Research</a></li>
+      <li><a href="#ai-security">AI × Security</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -554,6 +557,69 @@
             <div class="theme-desc">Embedding security and compliance as first-class artefacts in the software development lifecycle via shift-left automation frameworks.</div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI x CYBERSECURITY -->
+<section class="section" id="ai-security" style="background: color-mix(in oklch, var(--color-purple) 5%, var(--color-bg)); border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider);">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">AI Security Research</div>
+      <h2 class="section-title">AI &times; Cybersecurity — Defending AI, Defending with AI</h2>
+      <p class="section-desc">Work sits at the intersection of Policy-as-Code (PaC) and AI: securing AI/ML systems, and using AI-driven automation to strengthen security operations. This profile is updated as PhD research and applied projects progress — last updated August 2026.</p>
+    </div>
+
+    <h3 style="font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-text); margin-bottom: var(--space-2);">Defending AI — Securing AI/ML Systems</h3>
+    <p class="section-desc" style="margin-bottom: var(--space-6);">Hardening AI agents, AI coding pipelines, and AI transparency records so they stay auditable and governable by default.</p>
+    <div class="gh-grid" style="margin-bottom: var(--space-10);">
+      <a href="https://github.com/LGLenz/tideline" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="lock" width="18" height="18"></i><div class="gh-name">Tideline</div></div>
+        <div class="gh-status">Private Repo</div>
+        <div class="gh-desc">Human-in-the-loop approval cockpit for AI agents. Surfaces the policy/delegation chain behind each paused agent action, enforces a browser-signed Tier-3 structural lock for high-risk actions, and generates one-click EU AI Act Annex IV-style evidence packs.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#a86fdf;"></div>Agent Governance</div>
+      </a>
+      <a href="https://github.com/LGLenz/codepilot" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="bot" width="18" height="18"></i><div class="gh-name">CodePilot</div></div>
+        <div class="gh-status">Private Repo</div>
+        <div class="gh-desc">Multi-agent coding system (Planner / Coder / Reviewer / Security / QA / Releaser) where every consequential action routes through Tideline for single-named-human approval — not an unreviewed PR merge.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#a86fdf;"></div>Multi-Agent Systems</div>
+      </a>
+      <a href="https://github.com/LGLenz/atrs-as-code" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="git-compare" width="18" height="18"></i><div class="gh-name">atrs-as-code</div></div>
+        <div class="gh-status">Private Repo</div>
+        <div class="gh-desc">Governance-to-policy compiler turning the UK Algorithmic Transparency Recording Standard into YAML records, validated in CI, cross-walked to BSI Bausteine and ISO/IEC 42001, and diffed against deployed Terraform so an AI system's transparency record can't drift from what's running.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#a86fdf;"></div>Rego / Terraform / CI</div>
+      </a>
+      <a href="https://github.com/LGLenz/ai-security-labs" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="flask-conical" width="18" height="18"></i><div class="gh-name">ai-security-labs</div></div>
+        <div class="gh-status">Private Repo</div>
+        <div class="gh-desc">Hands-on OWASP ML Top 10 labs, including an FGSM adversarial-attack implementation against a CNN plus gradient-norm / confidence-based defense evaluation with ROC-curve analysis.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#3572A5;"></div>Python / Adversarial ML</div>
+      </a>
+    </div>
+
+    <h3 style="font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-text); margin-bottom: var(--space-2);">Defending with AI — AI-Enhanced Security Operations</h3>
+    <p class="section-desc" style="margin-bottom: var(--space-6);">Using AI and automation to replace manual audits and strengthen continuous compliance and threat governance.</p>
+    <div class="gh-grid">
+      <a href="https://github.com/LGLenz/devsecops-pac-framework" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="workflow" width="18" height="18"></i><div class="gh-name">DevSecOps PaC Pipeline</div></div>
+        <div class="gh-status">Private Repo</div>
+        <div class="gh-desc">Policy-as-Code/DevSecOps pipeline (Terraform + OPA/Conftest + GitHub Actions) that evaluates every infrastructure change against BSI C5, NIST SP 800-53, and ISO 27001-mapped Rego policies pre-merge, blocks violations, and emits signed compliance evidence — replacing manual audits.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#5591c7;"></div>OPA / Rego / Terraform</div>
+      </a>
+      <a href="https://github.com/LGLenz/nis2-compliance-as-code" target="_blank" rel="noopener noreferrer" class="gh-card reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="landmark" width="18" height="18"></i><div class="gh-name">nis2-compliance-as-code</div></div>
+        <div class="gh-status">Private Repo</div>
+        <div class="gh-desc">NIS2 automation for German SMEs, combining IaC policy enforcement with an AI-adaptive training platform.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#5591c7;"></div>IaC / AI-Adaptive Training</div>
+      </a>
+      <div class="gh-card static reveal">
+        <div class="gh-card-header"><i class="gh-icon" data-lucide="radar" width="18" height="18"></i><div class="gh-name">Agent Runtime Governance</div></div>
+        <div class="gh-status">Research in Progress</div>
+        <div class="gh-desc">Ongoing research extending Policy-as-Code into AI-agent runtime governance: each agent tool call is evaluated as a JSON payload against Rego policies by an OPA proxy before execution — governing agent behavior continuously, not just static infrastructure.</div>
+        <div class="gh-lang"><div class="lang-dot" style="background:#5591c7;"></div>OPA Proxy / Runtime PaC</div>
       </div>
     </div>
   </div>
