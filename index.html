@@ -273,6 +273,8 @@
       display: flex; flex-direction: column; gap: var(--space-3);
     }
     .gh-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .gh-card.static { cursor: default; }
+    .gh-card.static:hover { box-shadow: none; transform: none; }
     .gh-card-header { display: flex; align-items: center; gap: var(--space-3); }
     .gh-icon { color: var(--color-primary); }
     .gh-name { font-weight: 700; font-size: var(--text-sm); color: var(--color-text); }
@@ -613,7 +615,7 @@
         <div class="gh-desc">NIS2 automation for German SMEs, combining IaC policy enforcement with an AI-adaptive training platform.</div>
         <div class="gh-lang"><div class="lang-dot" style="background:#5591c7;"></div>IaC / AI-Adaptive Training</div>
       </a>
-      <div class="gh-card reveal">
+      <div class="gh-card static reveal">
         <div class="gh-card-header"><i class="gh-icon" data-lucide="radar" width="18" height="18"></i><div class="gh-name">Agent Runtime Governance</div></div>
         <div class="gh-status">Research in Progress</div>
         <div class="gh-desc">Ongoing research extending Policy-as-Code into AI-agent runtime governance: each agent tool call is evaluated as a JSON payload against Rego policies by an OPA proxy before execution — governing agent behavior continuously, not just static infrastructure.</div>
